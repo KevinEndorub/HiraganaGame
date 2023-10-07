@@ -30,8 +30,41 @@ from tkinter import*
                 ]"""
 
 def interfaz():
+    diccionario = crear_diccionario()
+    global caracterMostrado 
+    
+    caracterMostrado = diccionario.get(random.randint(0,70))
+    print("Inicio del juego :"+ caracterMostrado.sonido)
     principal = Tk()
+
+    miFrame = Frame(principal,width=1200,height=1200)
+    miFrame.pack()
+    
+    texto = Entry(miFrame) #Cuadro de texto para ingresar
+    texto.grid(row=0,column=1) #row column
+    #miFrame.bind('<Return>')
+    cosasLabel = Label(miFrame,text=caracterMostrado.hiragana)
+    cosasLabel.config(fg="Blue",justify="center",font=("arial",30))
+    cosasLabel.grid(row=0,column=0,padx=10)#Pad para no poner nada cerca de eso pady en vertical
+
+    button = Button(miFrame,text="Obtener texto", command=lambda:cambio_de_hiragana(diccionario.get(random.randint(0,70)),cosasLabel,texto.get())) ## Cambio de Hiragana con boton
+    button.grid(row=1, column=1)
+
+
     principal.mainloop()
+
+def cambio_de_hiragana(diccionario,label_a_cambiar,texto_caja):
+
+    
+    label_a_cambiar.config(text=diccionario.hiragana)
+    
+    print("Antes: "+ diccionario.sonido +"Caja: "+texto_caja)
+    if (caracterMostrado.sonido==texto_caja):
+        print("Muy Bien")
+    
+
+
+
 
 def crear_diccionario():
 
@@ -135,6 +168,7 @@ class Hiragana:
 
 
 
+
 def elegir_hiragana():
     enPartida = True
     while(enPartida):
@@ -156,13 +190,12 @@ def elegir_hiragana():
         os.system("cls")
         
 
-def escribir():
-    for x in array_hiraganas:
-        print(x)
+
 
 def ingreso():
     respuesta = input("")
     return respuesta
 
-#elegir_hiragana()
-interfaz()
+if __name__ == "__main__":
+    #elegir_hiragana()
+    interfaz()
