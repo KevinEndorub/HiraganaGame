@@ -26,14 +26,3 @@ array_hiraganas=["あ","い","う","え","お" ## aiueo
                 "ぴや","ぴゅ","ぴよ", ## Pya
                 ]
 
-#白魔松
-
-
-#日本語
-#遠藤　
-#コンプ手　
-
-##売= venta 春=primavera 婦=mujer 犬=perro
-
-
-####毛皮で覆われた
