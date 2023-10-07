@@ -1,6 +1,7 @@
 import random
-import os, time
-array_hiraganas=["あ","い","う","え","お" ## aiueo
+import os, time 
+from tkinter import*
+"""array_hiraganas=["あ","い","う","え","お" ## aiueo
                 "か","き","く","け","こ"  ## Ka
                 "さ","し","す","せ","そ", ## Sa
                 "た","ち","つ","て","と", ## Ta
@@ -26,7 +27,12 @@ array_hiraganas=["あ","い","う","え","お" ## aiueo
                 "じや","じゅ","じよ", ## Ja
                 "びや","びゅ","びよ", ## Bya
                 "ぴや","ぴゅ","ぴよ", ## Pya
-                ]
+                ]"""
+
+def interfaz():
+    principal = Tk()
+    principal.mainloop()
+
 def crear_diccionario():
 
     x0 =Hiragana("あ",'a')
@@ -158,4 +164,5 @@ def ingreso():
     respuesta = input("")
     return respuesta
 
-elegir_hiragana()
+#elegir_hiragana()
+interfaz()
