@@ -28,21 +28,15 @@ from tkinter import*
                 "びや","びゅ","びよ", ## Bya
                 "ぴや","ぴゅ","ぴよ", ## Pya
                 ]"""
-def cambio_de_hiragana(diccionario,label_a_cambiar,texto_caja,caja_texto):
-    eliminar(caja_texto)
-    label_a_cambiar.config(text=diccionario.hiragana)
-    
-    print("Antes: "+ diccionario.sonido +"Caja: "+texto_caja)
-    if (caracterMostrado.sonido==texto_caja):
-        print("Muy Bien")
 
-def eliminar(textobox):
-    textobox.delete(0,END)
+
 
 class Interfaz:
     def __init__(self,diccionario_de_hiraganas):
         self.diccionario_de_hiraganas = diccionario_de_hiraganas
         self.hiragana_a_responder = ""
+        self.good = 0
+        self.bad = 0
     
     def setDiccionario(self,diccionario):
         self.diccionario_de_hiraganas = diccionario
@@ -60,41 +54,94 @@ class Interfaz:
     def set_hiragana_a_responder(self,hiragana):
         self.hiragana_a_responder = hiragana
 
-    def verificar(self,label_hiragana):
+    def eliminar(self,textobox):
+        textobox.delete(0,END)
+
+    def incremetar_good(self):
+        self.good = self.good + 1
+
+    def incremetar_bad(self):
+        self.bad = self.bad + 1
+
+    def verificar(self,label_hiragana,caja_de_texto,good,bad,correcto):
         #print("verifico")
+        # Verifico si conteste bien
+
+        if(caja_de_texto.get()==self.get_hiragana_a_responder().sonido):
+            self.incremetar_good()
+            correcto.config(text="")
+        else:
+            self.incremetar_bad()
+            correcto.config(text="Era:" + self.get_hiragana_a_responder().sonido)
+        # Creo uno nuevo
         nuevo_caracter = self.randomizarHiragana()
+        # 
         self.set_hiragana_a_responder(nuevo_caracter) 
         label_hiragana.config(text=self.get_hiragana_a_responder().hiragana)
+        good.config(text=self.good)
+        bad.config(text=self.bad)
+        self.eliminar(caja_de_texto)
+
+
+
+
+
 
     def interfaz(self):
         self.set_hiragana_a_responder(self.randomizarHiragana())
         ## Caja Principal
         principal = Tk()
         principal.title("Practica de Hiraganas")
-        principal.resizable(0,0)
-        principal.geometry("320x320")
+        # principal.resizable(0,1)
+        principal.geometry("420x180")
 
         ## Interfaz
 
         frame_Juego=Frame(principal,height=320,width=320)
-        frame_Juego.config(bg="white",relief="sunken",bd=20)
-        frame_Juego.pack(side="left")
-
-        ## Pantalla del Hiragana
+        frame_Juego.config(relief="sunken",bd=20)
+        #frame_Juego.pack(side="left")
+        frame_Juego.pack(expand=True, fill=BOTH)
         
 
+        ## Pantalla del Hiragana
         label_hiragana = Label(frame_Juego,text=self.get_hiragana_a_responder().hiragana)
         label_hiragana.config(fg="Blue",justify="center",font=("calibri",50))
         label_hiragana.grid(row=0,column=0,padx=5)
 
+        ## Pantalla de correccion
+
+        label_correcto = Label(frame_Juego,text= "")
+        label_correcto.grid(row=1,column=0)
+        label_correcto.config(fg="Blue",justify="center",font=("arial",15))
 
         #Pantalla del TextBox
         texto = Entry(frame_Juego) 
         texto.grid(row=0,column=1)
+        texto.config(fg="Blue",justify="center",font=("calibri",15))
+
+        #boton 
         
-        button = Button(frame_Juego, text="Finalizar", command=lambda: self.verificar(label_hiragana) )
+        button = Button(frame_Juego, text="Finalizar", command=lambda: self.verificar(label_hiragana,texto,label_puntajes_g,label_puntajes_b,label_correcto) )
         button.grid(row=1, column=1)
 
+
+
+
+        #Pantalla de score
+        label_puntajes_g_a = Label(frame_Juego,text="Good")
+        label_puntajes_g_a.grid(row=0,column=2)
+        label_puntajes_g_a.config(fg="Blue",justify="center",font=("calibri",15))
+
+        label_puntajes_g = Label(frame_Juego,text=self.good)
+        label_puntajes_g.grid(row=0,column=3)
+
+
+        label_puntajes_b_a = Label(frame_Juego,text="Bad")
+        label_puntajes_b_a.grid(row=1,column=2)
+        label_puntajes_b_a.config(fg="Blue",justify="center",font=("calibri",15))
+
+        label_puntajes_b = Label(frame_Juego,text=self.bad)
+        label_puntajes_b.grid(row=1,column=3)
 
 
         principal.mainloop()
