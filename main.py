@@ -28,42 +28,81 @@ from tkinter import*
                 "びや","びゅ","びよ", ## Bya
                 "ぴや","ぴゅ","ぴよ", ## Pya
                 ]"""
-
-def interfaz():
-    diccionario = crear_diccionario()
-    global caracterMostrado 
-    
-    caracterMostrado = diccionario.get(random.randint(0,70))
-    print("Inicio del juego :"+ caracterMostrado.sonido)
-    principal = Tk()
-
-    miFrame = Frame(principal,width=1200,height=1200)
-    miFrame.pack()
-    
-    texto = Entry(miFrame) #Cuadro de texto para ingresar
-    texto.grid(row=0,column=1) #row column
-    #miFrame.bind('<Return>')
-    cosasLabel = Label(miFrame,text=caracterMostrado.hiragana)
-    cosasLabel.config(fg="Blue",justify="center",font=("arial",30))
-    cosasLabel.grid(row=0,column=0,padx=10)#Pad para no poner nada cerca de eso pady en vertical
-
-    button = Button(miFrame,text="Obtener texto", command=lambda:cambio_de_hiragana(diccionario.get(random.randint(0,70)),cosasLabel,texto.get())) ## Cambio de Hiragana con boton
-    button.grid(row=1, column=1)
-
-
-    principal.mainloop()
-
-def cambio_de_hiragana(diccionario,label_a_cambiar,texto_caja):
-
-    
+def cambio_de_hiragana(diccionario,label_a_cambiar,texto_caja,caja_texto):
+    eliminar(caja_texto)
     label_a_cambiar.config(text=diccionario.hiragana)
     
     print("Antes: "+ diccionario.sonido +"Caja: "+texto_caja)
     if (caracterMostrado.sonido==texto_caja):
         print("Muy Bien")
+
+def eliminar(textobox):
+    textobox.delete(0,END)
+
+class Interfaz:
+    def __init__(self,diccionario_de_hiraganas):
+        self.diccionario_de_hiraganas = diccionario_de_hiraganas
+        self.hiragana_a_responder = ""
     
+    def setDiccionario(self,diccionario):
+        self.diccionario_de_hiraganas = diccionario
+
+    def getDiccionario(self):
+        return self.diccionario_de_hiraganas
+    
+    def randomizarHiragana(self):
+        caracter = self.getDiccionario().get(random.randint(0,70))
+        return caracter
+    
+    def get_hiragana_a_responder(self):
+        return self.hiragana_a_responder 
+
+    def set_hiragana_a_responder(self,hiragana):
+        self.hiragana_a_responder = hiragana
+
+    def verificar(self,label_hiragana):
+        #print("verifico")
+        nuevo_caracter = self.randomizarHiragana()
+        self.set_hiragana_a_responder(nuevo_caracter) 
+        label_hiragana.config(text=self.get_hiragana_a_responder().hiragana)
+
+    def interfaz(self):
+        self.set_hiragana_a_responder(self.randomizarHiragana())
+        ## Caja Principal
+        principal = Tk()
+        principal.title("Practica de Hiraganas")
+        principal.resizable(0,0)
+        principal.geometry("320x320")
+
+        ## Interfaz
+
+        frame_Juego=Frame(principal,height=320,width=320)
+        frame_Juego.config(bg="white",relief="sunken",bd=20)
+        frame_Juego.pack(side="left")
+
+        ## Pantalla del Hiragana
+        
+
+        label_hiragana = Label(frame_Juego,text=self.get_hiragana_a_responder().hiragana)
+        label_hiragana.config(fg="Blue",justify="center",font=("calibri",50))
+        label_hiragana.grid(row=0,column=0,padx=5)
 
 
+        #Pantalla del TextBox
+        texto = Entry(frame_Juego) 
+        texto.grid(row=0,column=1)
+        
+        button = Button(frame_Juego, text="Finalizar", command=lambda: self.verificar(label_hiragana) )
+        button.grid(row=1, column=1)
+
+
+
+        principal.mainloop()
+
+
+
+
+    
 
 
 def crear_diccionario():
@@ -166,9 +205,6 @@ class Hiragana:
         self.hiragana = hiragana
         self.sonido = sonido
 
-
-
-
 def elegir_hiragana():
     enPartida = True
     while(enPartida):
@@ -198,4 +234,6 @@ def ingreso():
 
 if __name__ == "__main__":
     #elegir_hiragana()
-    interfaz()
+    main = Interfaz(crear_diccionario())
+    #print(main.diccionario_de_hiraganas)
+    main.interfaz()
